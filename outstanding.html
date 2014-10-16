@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.postcode_area {
+  fill: #AAA;
+}
+  
+.mesh {
+  fill: none;
+  stroke: #fff;
+  stroke-width: .5px;
+  stroke-linejoin: round;
+}
+
+.subunit-boundary {
+  fill: none;
+  stroke: rgb(8,48,107);
+  stroke-linejoin: round;
+}
+
+.q0-9 { fill:rgb(247,251,255); }
+.q1-9 { fill:rgb(222,235,247); }
+.q2-9 { fill:rgb(198,219,239); }
+.q3-9 { fill:rgb(158,202,225); }
+.q4-9 { fill:rgb(107,174,214); }
+.q5-9 { fill:rgb(66,146,198); }
+.q6-9 { fill:rgb(33,113,181); }
+.q7-9 { fill:rgb(8,81,156); }
+.q8-9 { fill:rgb(8,48,107); }
+
+</style>
+
+<!-- Included CSS Files-->
+<link rel="stylesheet" href="stylesheets/style.css">
+<link rel="stylesheet" href="stylesheets/skins/pink.css">
+<link rel="stylesheet" href="stylesheets/responsive.css">
+
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script> <!-- NOW WE ARE TAKING FROM BOSTOCK HIMSELF -->
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"
+		type="text/javascript"></script>
+
+</head>
+
+
+<!-- HEADER
+================================================== -->
+<div class="row">	
+		<div class="four columns">
+			<div class="logo">
+				<a href="index.html"><h4>Schools Viz</h4></a>
+			</div>
+		</div>
+</div>
+<div class="clear">
+</div>
+
+<!-- SUBHEADER
+================================================== -->
+<div id="subheader">
+	<div class="row">
+		<div class="twelve columns">
+			<p class="left">
+				 Visualization Gallery
+			</p>
+			<p class="right">
+				 <a href="moneymatters.html">next>></a>
+			</p>
+		</div>
+	</div>
+</div>
+<div class="hr">
+</div>
+
+<div class = "row">
+	<div class = "panel">
+		<h4>Outstanding!</h4>
+		<p>Who doesn't love a map? This choropleth shows the proportion of OFSTED Outstanding schools in England broken down by postcode</p>
+	</div>
+</div>
+
+<div id = "here"></div>
+
+
+<div class="row">
+	<div class="twelve columns">
+			<blockquote>
+				<p>
+					 The highest density of Outstanding schools are in Harrow and Harrowgate. 
+				</p>
+				<p>
+					Coincidence?
+				</p>
+				<p>
+					(Yes but a neat one)
+				</p>
+			</blockquote>
+	</div>
+</div>
+
+<script>
+
+var json = {};
+
+var areadata={};
+
+var quantize = d3.scale.quantize()
+	.domain([0, 100])
+	.range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+
+
+var width = 480,
+    height = 600;
+
+var projection = d3.geo.albers()
+    .center([0, 55.4])
+    .rotate([4.4, 0])
+    .parallels([50, 60])
+    .scale(1200 * 5 * 0.5)
+    .translate([width / 2, height / 2]);
+
+var path = d3.geo.path()
+    .projection(projection);
+
+var svg = d3.select("#here").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var dataByArea = d3.map();
+var percentByArea = d3.map();
+
+queue()
+	.defer(d3.json, "data/uk-postcodes.json")
+	.defer(d3.csv, "data/outstanding.csv", function(d) { dataByArea.set(d.id, d.data);
+				percentByArea.set(d.id, parseInt(100*parseFloat(d.outstanding)) + '%')})
+	.await(ready);
+	
+function ready(error, uk) {
+	
+/* }
+d3.json("uk-postcodes.json", function(error, uk) { */
+  svg.selectAll(".subunit")
+      .data(topojson.feature(uk, uk.objects['uk-postcode-area']).features)
+    .enter().append("path")
+      .attr("class", function(d) {return quantize(dataByArea.get(d.id)); })
+      .attr("d", path)
+	  .append("svg:title")
+	            .attr("transform", function (d) { return "translate(" + path.centroid(d) + ")"; })
+	            .attr("dy", ".35em")
+	            .text(function (d) { return d.id + ': ' + percentByArea.get(d.id); });
+	            
+  svg.append("path")
+  .datum(topojson.mesh(uk, uk.objects['uk-postcode-area'], function(a, b) { return a !== b; }))
+  .attr("class", "mesh")
+  .attr("d", path); 
+
+  svg.append("path")
+  .datum(topojson.mesh(uk, uk.objects['uk-postcode-area'], function(a, b) { return a === b; }))
+  .attr("d", path)
+  .attr("class", "subunit-boundary");
+ 
+};
+
+
+</script>
+
+
+<!-- FOOOTER 
+================================================== -->
+<div id="footer">
+	<footer class="row">
+	<p class="back-top floatright">
+		<a href="#top"><span></span></a>
+	</p>
+	<div class="four columns">
+		 Visualization projects
+	</div>
+
+	</footer>
+</div>
+<div class="copyright">
+	<div class="row">
+		<div class="six columns">
+			 &copy;<span class="small"> Copyright 2014 Thomas Ridd</span>
+		</div>
+	</div>
+</div>
+
+</body>
+
+</html>
