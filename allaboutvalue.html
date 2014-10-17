@@ -17,7 +17,7 @@
 
 .j3dot {
   stroke: none;
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
 .j3tooltip {
@@ -78,7 +78,11 @@
 	<div class="twelve columns">
 			<blockquote>
 				<p>
-					 
+					 Wisdom at the bottom end of the market argues that high achieving schools get that way not through virtue but
+					 because they only accept the best and brightest.  
+				</p>
+				<p>
+					 By and large it looks like this theory isn't so. On to the next theory
 				</p>
 			</blockquote>
 	</div>
@@ -99,13 +103,13 @@ var margin = {top: 20, right: 20, bottom: 30, left: 40},
  */ 
 
 // setup x 
-var xValue = function(d) { return parseFloat( d['AC5incEM']);}, // data -> value
+var xValue = function(d) { return parseFloat( d.ValueAdded]);}, // data -> value
     xScale = d3.scale.linear().range([0, width]), // value -> display
     xMap = function(d) { return xScale(xValue(d));}, // data -> display
     xAxis = d3.svg.axis().scale(xScale).orient("bottom");
 
 // setup y
-var yValue = function(d) { return parseFloat( d.ValueAdded );}, // data -> value
+var yValue = function(d) { return parseFloat( d.5ACincEM );}, // data -> value
     yScale = d3.scale.linear().range([height, 0]), // value -> display
     yMap = function(d) { return yScale(yValue(d));}, // data -> display
     yAxis = d3.svg.axis().scale(yScale).orient("left");
@@ -144,7 +148,7 @@ d3.csv("data/value.csv", function(error, data) {
       .attr("x", width)
       .attr("y", -6)
       .style("text-anchor", "end")
-      .text("5 A* to C inc Eng and Math");
+      .text("Value Added");
 
   // y-axis
   svg.append("g")
@@ -156,7 +160,7 @@ d3.csv("data/value.csv", function(error, data) {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Value Added");
+      .text("5 A* to C inc Eng and Math");
 
   // draw dots
   svg.selectAll(".j3dot")
