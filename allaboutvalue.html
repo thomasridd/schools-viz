@@ -78,11 +78,10 @@
 	<div class="twelve columns">
 			<blockquote>
 				<p>
-					 Wisdom at the bottom end of the market argues that high achieving schools get that way not through virtue but
-					 because they only accept the best and brightest.  
+					Is it encouraging to see that OFSTED are rewarding the schools with highest value added as well as those that achieve high grades on an absolute basis?   
 				</p>
 				<p>
-					 By and large it looks like this theory isn't so. On to the next theory
+					Could be that cause and effect aren't what they should be hereabouts
 				</p>
 			</blockquote>
 	</div>
@@ -103,7 +102,7 @@ var margin = {top: 20, right: 20, bottom: 30, left: 40},
  */ 
 
 // setup x 
-var xValue = function(d) { return parseFloat( d.ValueAdded]);}, // data -> value
+var xValue = function(d) { return parseFloat( d.ValueAdded);}, // data -> value
     xScale = d3.scale.linear().range([0, width]), // value -> display
     xMap = function(d) { return xScale(xValue(d));}, // data -> display
     xAxis = d3.svg.axis().scale(xScale).orient("bottom");
