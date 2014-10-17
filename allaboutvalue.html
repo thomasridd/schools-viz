@@ -108,7 +108,7 @@ var xValue = function(d) { return parseFloat( d.ValueAdded);}, // data -> value
     xAxis = d3.svg.axis().scale(xScale).orient("bottom");
 
 // setup y
-var yValue = function(d) { return parseFloat( d['5ACincEM'] );}, // data -> value
+var yValue = function(d) { return parseFloat( d['AC5incEM'] );}, // data -> value
     yScale = d3.scale.linear().range([height, 0]), // value -> display
     yMap = function(d) { return yScale(yValue(d));}, // data -> display
     yAxis = d3.svg.axis().scale(yScale).orient("left");
@@ -176,7 +176,7 @@ d3.csv("data/value.csv", function(error, data) {
                .duration(200)
                .style("opacity", .9);
           tooltip.html(d.school + "<br/> (" + parseInt(xValue(d)) 
-	        + "%, " + yValue(d) + ")")
+	        + ", " + parseInt(yValue(d)) + "%)")
                .style("left", (d3.event.pageX + 8) + "px")
                .style("top", (d3.event.pageY - 28) + "px");
       })
